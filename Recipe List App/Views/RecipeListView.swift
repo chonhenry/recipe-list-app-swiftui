@@ -12,24 +12,42 @@ struct RecipeListView: View {
     @ObservedObject var model = ReciprModel()
     
     var body: some View {
-        NavigationView {
-            List(model.recipes) { r in
-                NavigationLink(
-                    destination: RecipeDetailView(recipe: r),
-                    label: {
-                        HStack(spacing: 20.0) {
-                            Image(r.image)
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 50, height: 50, alignment: .center)
-                                .clipped()
-                                .cornerRadius(5)
-                            Text(r.name)
-                        }
-                    })
+        
+        VStack(spacing: 0) {
+            GeometryReader { geo in
+                Rectangle()
+                    .foregroundColor(.green)
+                    .onTapGesture {
+                        print("global x: \(geo.frame(in: .global).minX), y: \(geo.frame(in: .global).minY)")
+                        print("local x: \(geo.frame(in: .local).minX), y: \(geo.frame(in: .local).minY)")
+                }
+                
+                Rectangle()
+                    .foregroundColor(.red)
+                    .frame(width: geo.size.width * 2 / 3, height: geo.size.height / 4)
+                    .padding(.leading, geo.size.width / 6)
+                    .padding(.top, geo.size.height * 3 / 8)
             }
-            .navigationTitle("All Recipes")
-        }
+            
+            GeometryReader { geo in
+                Rectangle()
+                    .foregroundColor(.purple)
+                    .frame(width: geo.size.width/2, height: geo.size.height, alignment: .center)
+                    .onTapGesture {
+                        print("global x: \(geo.frame(in: .global).minX), y: \(geo.frame(in: .global).minY)")
+                        print("local x: \(geo.frame(in: .local).minX), y: \(geo.frame(in: .local).minY)")
+                    }
+                
+                Rectangle()
+                    .foregroundColor(.yellow)
+                    .frame(width: geo.size.width/2, height: geo.size.height, alignment: .center)
+                    .onTapGesture {
+                        print("global x: \(geo.frame(in: .global).minX), y: \(geo.frame(in: .global).minY)")
+                        print("local x: \(geo.frame(in: .local).minX), y: \(geo.frame(in: .local).minY)")
+                    }.offset(x: geo.frame(in: .local).midX, y: 0)
+            }
+        }.ignoresSafeArea()
+        
     }
 }
 
